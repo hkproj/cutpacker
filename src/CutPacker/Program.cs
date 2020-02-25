@@ -1,8 +1,11 @@
 ﻿using System;
+using Newtonsoft.Json;
 using System.Linq;
 using System.Collections.Generic;
 using Google.OrTools.Algorithms;
 using Google.OrTools.LinearSolver;
+using System.IO;
+using Newtonsoft.Json.Linq;
 
 namespace CutPacker
 {
@@ -39,7 +42,7 @@ namespace CutPacker
 
         public void AddItem(string name, int quantity, double weight)
         {
-            for(var i = 1; i <= quantity; i++)
+            for (var i = 1; i <= quantity; i++)
             {
                 this.Items.Add(new DataItem($"{name}_{(i)}", weight));
             }
@@ -54,7 +57,7 @@ namespace CutPacker
 
 
     class Program
-    {        
+    {
 
 
         static DataModel BuildModel()
@@ -76,9 +79,41 @@ namespace CutPacker
             return dataModel;
         }
 
-        static void SolveAndPrint()
+        static DataModel ReadModelFromFile(string configuration_file, string data_file)
         {
-            DataModel data = BuildModel();
+            var data_content = File.ReadAllLines(data_file);
+            var configuration_content = File.ReadAllText(configuration_file);
+
+            try
+            {
+                dynamic configuration = JToken.Parse(configuration_content);
+                double bin_capacity = configuration.bin_capacity;
+
+                var model = new DataModel(bin_capacity);
+
+                foreach(var line in data_content) {
+                    if (String.IsNullOrEmpty(line.Trim())) {
+                        continue;
+                    }
+
+                    var fields = line.Split(';', StringSplitOptions.RemoveEmptyEntries);
+                    var name = fields[0];
+                    var quantity = int.Parse(fields[1]);
+                    var weight = double.Parse(fields[2]);
+
+                    model.AddItem(name, quantity, weight);
+                }
+
+                return model;
+            }
+            catch (Exception)
+            {
+                return null;
+            }
+        }
+
+        static void SolveAndPrint(DataModel data)
+        {
             // Create the linear solver with the CBC backend.
             Solver solver = Solver.CreateSolver("BinPackingSolver", "CBC_MIXED_INTEGER_PROGRAMMING");
 
@@ -173,12 +208,21 @@ namespace CutPacker
             }
         }
 
+        static int L1Bound(DataModel model) 
+        {
+            return (int)Math.Ceiling(model.Items.Select(m => m.Weight).Sum() / model.BinCapacity);
+        }
+
         static void Main(string[] args)
         {
             var start_time = DateTime.UtcNow;
             Console.WriteLine($"Job started at: {start_time.ToLocalTime().ToString()}");
 
-            SolveAndPrint();
+            var model = ReadModelFromFile(Path.GetFullPath(@"Data\data_config.json"), Path.GetFullPath(@"Data\input.csv"));
+
+            Console.WriteLine($"L1 Bound: {L1Bound(model)}");
+
+            //SolveAndPrint(model);
 
             var end_time = DateTime.UtcNow;
             var duration = (end_time - start_time);
