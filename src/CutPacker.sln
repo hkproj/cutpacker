@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.28803.352
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CutPacker", "CutPacker\CutPacker.csproj", "{2061420A-DF4B-4B0B-8EF5-413F9B94FD01}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{2061420A-DF4B-4B0B-8EF5-413F9B94FD01}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2061420A-DF4B-4B0B-8EF5-413F9B94FD01}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2061420A-DF4B-4B0B-8EF5-413F9B94FD01}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2061420A-DF4B-4B0B-8EF5-413F9B94FD01}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {0CA83D39-A839-4910-88F1-C71BD6222E0B}
+	EndGlobalSection
+EndGlobal
